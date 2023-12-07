@@ -13,19 +13,25 @@
         // NCMB アクセスの準備
         let ncmb = new NCMB(appKey, clientKey);
         // 利用するデータベースを指定（存在しなければ生成）
-        let TestClass = ncmb.DataStore("FetchTest");
+        let TestClass = ncmb.DataStore("Original");
 
         function register() {
             // 登録するレコードを用意
-            let testRecord = new TestClass();
-            let key = "text";
-            let value = $("#value").val();
+            let newRecord = new TestClass();
+            let key = "name";
+            let key1 = "score";
+            let key2 = "number";
+            let name = $("#name").val();
+            let score = $("#score").val();
+            let number = $("#number").val();
             // レコードのフィールドと値を設定
-            testRecord.set(key, value);
+            newRecord.set(key, name);
+            newRecord.set(key1, score);
+            newRecord.set(key2, number);
             // レコードをデータベースに登録
-            testRecord.save()
+            newRecord.save()
                 .then(function(m) {
-                    $("#message").html("New object created with objectId: " + testRecord.objectId);
+                    $("#message").html("New object created with objectId: " + newRecord.objectId);
                 })
                 .catch(function(err) {
                     $("#message").html("Failed to create new object, with error code: " + JSON.stringify(err));
@@ -33,17 +39,19 @@
         }
 
         function fetch() {
-            var TestClass = ncmb.DataStore("FetchTest");
+            var TestClass = ncmb.DataStore("Original");
             TestClass.fetch()
                 .then(function(results) {
                     var data = results.get("text");
+                    var data1 = results.get("text1");
+                    var data2 = results.get("text2");  
                     var update = results.get("updateDate");
                     $("#message").html(data + ":" + update);
                 })
         }
 
         function fetchAll() {
-            var TestClass = ncmb.DataStore("FetchTest");
+            var TestClass = ncmb.DataStore("Original");
             TestClass.fetchAll()
                 .then(function(results) {
                     var msg = "";
@@ -61,8 +69,16 @@
 <body>
     <h1>mBaaS fetch</h1>
     <div>
-        <label for="value">Value:</label>
-        <input id="value" type="text" value="Hello, mBaaS!">
+        <label for="value">name</label>
+        <input id="value" type="text" value="please name">
+    </div>
+    <div>
+        <label for="value">score</label>
+        <input id="value" type="text1" value="please score">
+    </div>
+    <div>
+        <label for="value">number</label>
+        <input id="value" type="text2" value="please number">
     </div>
     <div id="button">
         <button id="btnA" class="btn" onclick="register()">Register</button>
